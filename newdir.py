@@ -146,15 +146,6 @@ animals = [
 
 
 if __name__ == "__main__":
-    s_adj = sorted(adjectives)
-
-    print("adjectives = [")
-    for item in s_adj:
-        print(f'    "{item}",')
-    print("]")
-
-    raise Exception("lol")
-
     whoami = subprocess.check_output(["whoami"])
     whoami = whoami.decode("utf-8")
     whoami = whoami.strip()
