@@ -2,167 +2,36 @@
 
 import os
 import random
-import subprocess
+import sys
+import tempfile
+
+from animals import animals
+from adjectives import adjectives
 
 
-adjectives = [
-    "acidic",
-    "bald",
-    "bitter",
-    "brave",
-    "calm",
-    "chubby",
-    "clean",
-    "cool",
-    "creamy",
-    "drab",
-    "eager",
-    "fancy",
-    "fit",
-    "flabby",
-    "fresh",
-    "gentle",
-    "greasy",
-    "happy",
-    "hot",
-    "jolly",
-    "juicy",
-    "kind",
-    "lively",
-    "long",
-    "moldy",
-    "nice",
-    "nutty",
-    "plain",
-    "plump",
-    "polite",
-    "proud",
-    "putrid",
-    "quaint",
-    "rancid",
-    "ripe",
-    "rotten",
-    "salty",
-    "savory",
-    "short",
-    "silly",
-    "skinny",
-    "sour",
-    "spicy",
-    "stale",
-    "stocky",
-    "sweet",
-    "tangy",
-    "tart",
-    "tasty",
-    "ugly",
-    "witty",
-    "yummy",
-    ]
-
-animals = [
-    "alpaca",
-    "ant",
-    "ape",
-    "donky",
-    "baboon",
-    "badger",
-    "bat",
-    "bear",
-    "beaver",
-    "bee",
-    "beetle",
-    "bug",
-    "bull",
-    "camel",
-    "cat",
-    "cicada",
-    "clam",
-    "cod",
-    "coyote",
-    "crab",
-    "crow",
-    "deer",
-    "dog",
-    "duck",
-    "eel",
-    "elk",
-    "ferret",
-    "fish",
-    "fly",
-    "fox",
-    "frog",
-    "gerbil",
-    "gnat",
-    "gnu",
-    "goat",
-    "hare",
-    "hornet",
-    "horse",
-    "hound",
-    "hyena",
-    "impala",
-    "jackal",
-    "koala",
-    "lion",
-    "lizard",
-    "llama",
-    "locust",
-    "louse",
-    "mole",
-    "monkey",
-    "moose",
-    "mouse",
-    "mule",
-    "otter",
-    "ox",
-    "oyster",
-    "panda",
-    "pig",
-    "pug",
-    "rabbit",
-    "salmon",
-    "seal",
-    "shark",
-    "sheep",
-    "skunk",
-    "snail",
-    "snake",
-    "spider",
-    "swan",
-    "tiger",
-    "trout",
-    "turtle",
-    "walrus",
-    "wasp",
-    "weasel",
-    "whale",
-    "wolf",
-    "wombat",
-    "worm",
-    "yak",
-    "zebra",
-]
-
-
-if __name__ == "__main__":
-    whoami = subprocess.check_output(["whoami"])
-    whoami = whoami.decode("utf-8")
-    whoami = whoami.strip()
-
-    tmpdir = os.path.join("/tmp", whoami)
-
-    while True:
+while True:
+    try:
         adjective = random.choice(adjectives)
         animal = random.choice(animals)
 
         dirname = adjective + '_' + animal
-        dirpath = os.path.join(tmpdir, dirname)
+        dirpath = os.path.join(tempfile.gettempdir(), dirname)
 
-        try:
-            os.mkdir(dirpath)
-            break
-        except FileExistsError:
-            pass
+        os.mkdir(dirpath)
+        break
+    except FileExistsError:  # directory exists already
+        if len(animals) > len(adjectives):
+            animals.remove(animal)
+        else:
+            adjectives.remove(adjective)
+    except IndexError:  # no animals or adjectives left
+        print(
+            "newdir exhausted all choices!",
+            file=sys.stderr
+        )
+        sys.exit(1)
+    except Exception as e:
+        print(f"newdir failed with '{type(e)}: {e}'", file=sys.stderr)
+        sys.exit(1)
 
-    print(f"cd {dirpath}", end='')
+print(f"cd {dirpath}", end='')
