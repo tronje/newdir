@@ -34,4 +34,5 @@ while True:
         print(f"newdir failed with '{type(e)}: {e}'", file=sys.stderr)
         sys.exit(1)
 
+print(f"cd {dirpath}", file=sys.stderr)
 print(f"cd {dirpath}", end='')
