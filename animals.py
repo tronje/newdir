@@ -2,7 +2,7 @@ animals = [
     "alpaca",
     "ant",
     "ape",
-    "donky",
+    "donkey",
     "baboon",
     "badger",
     "bat",
