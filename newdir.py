@@ -9,7 +9,11 @@ from animals import animals
 from adjectives import adjectives
 
 
-while True:
+def print_err(msg):
+    print(msg, file=sys.stderr)
+
+
+def newdir():
     try:
         adjective = random.choice(adjectives)
         animal = random.choice(animals)
@@ -18,21 +22,34 @@ while True:
         dirpath = os.path.join(tempfile.gettempdir(), dirname)
 
         os.mkdir(dirpath)
-        break
+        return dirpath
     except FileExistsError:  # directory exists already
-        if len(animals) > len(adjectives):
-            animals.remove(animal)
-        else:
-            adjectives.remove(adjective)
-    except IndexError:  # no animals or adjectives left
-        print(
-            "newdir exhausted all choices!",
-            file=sys.stderr
-        )
-        sys.exit(1)
+        return None
     except Exception as e:
-        print(f"newdir failed with '{type(e)}: {e}'", file=sys.stderr)
+        print_err(f"newdir failed with '{type(e)}: {e}'")
         sys.exit(1)
 
-print(f"cd {dirpath}", file=sys.stderr)
-print(f"cd {dirpath}", end='')
+
+def main():
+    tries = 0
+
+    while tries < 10:
+        path = newdir()
+        if path is not None:
+            # print to stderr so the user sees the command
+            print_err(f"cd {path}")
+
+            # print to stdout so `eval` can evalute the command
+            print(f"cd {path}", end='')
+
+            # done!
+            return
+        else:
+            tries += 1
+
+    print_err(f"newdir tried and failed to create a directory {tries} times!")
+    sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()
