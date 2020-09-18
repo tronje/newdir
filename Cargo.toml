@@ -3,6 +3,9 @@ name = "newdir"
 version = "0.1.0"
 authors = ["Tronje Krabbe <hi@tron.je>"]
 edition = "2018"
+license = "Unlicense"
+description = "A simple program to create a temporary directory with a friendly name"
+repository = "https://github.com/tronje/newdir"
 
 [dependencies]
 friendly-zoo = "0.1.0"
